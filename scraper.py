@@ -5,6 +5,8 @@ import pandas as pd
 senate_url = "https://nmlegis.gov/Members/Legislator_List?T=S"
 r_senate = requests.get(senate_url)
 senate_soup = BeautifulSoup(r_senate.content, 'html5lib')
+office = senate_soup.find('a', attrs = {'href':'siteMapBreadcrumbs_lnkPage_2'})
+print(office.text)
 senate_list = senate_soup.find('select', attrs = {'id':'MainContent_ddlLegislators'})
 rep_names = []
 rep_tags = []
