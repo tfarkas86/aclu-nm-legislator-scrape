@@ -1,6 +1,7 @@
 import requests 
 from bs4 import BeautifulSoup
 import pandas as pd
+from os.path import basename
 
 # loop over offices, then navigate to pages for each legislator and scrape data
 for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
@@ -8,7 +9,7 @@ for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
     print(office_name)
     office_url = f'https://nmlegis.gov/Members/Legislator_List?T={office_identifier}'
     r_office = requests.get(office_url)
-    office_soup = BeautifulSoup(r_office.content, 'html5lib')
+    office_soup = BeautifulSoup(r_office.content, 'html5lib', from_encoding='utf-8')
     #office = office_soup.find('a', attrs = {'id':'siteMapBreadcrumbs_lnkPage_2'}) # get office from page
     office_list = office_soup.find('select', attrs = {'id':'MainContent_ddlLegislators'})
    
@@ -29,6 +30,7 @@ for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
 
     # loop through legislators and scape data
     for name, rep in zip(rep_names, rep_tags):
+       
         print(f'\t{name}')
         URL = f"https://nmlegis.gov/Members/Legislator?SponCode={rep}"
         r = requests.get(URL)
@@ -36,9 +38,8 @@ for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
         full_name = soup.find('span', attrs = {'id':'MainContent_formViewLegislatorName_lblLegislatorName'})
         party = full_name.text[(full_name.text.find('(') + 1):full_name.text.find(')')]
         info = soup.find('div', attrs = {'class':'col-xs-12 col-sm-9 legislator-information'}) 
-        
         out_dict = {'Legislator':name, 'Party':party, 'Office':office_name} # initialize dict to hold infoi
-
+        
         # loop through info elements and add to dict
         for row in info.findAll('li', attrs = {'class':'list-group-item'}):
             attr = row.b.text
@@ -57,8 +58,16 @@ for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
             out_dict.update(dict_add)
         
         dictlist.append(out_dict) # concatenate with growing dict 
-
+        
+        # download photo
+        pic = soup.find('img', attrs = {'id':'MainContent_formViewLegislator_imgLegislator'})['src'][2:]
+        _name = name.replace(' ', '_')
+        pic_path = f'https://nmlegis.gov{pic}'
+        with open(f'./legislator-photos/{_name}.jpg', 'wb') as f:
+            f.write(requests.get(pic_path).content) 
+        
     df = pd.DataFrame(dictlist) # create DataFrame from list of dicts
     
     # write DataFrame out to one CSV for each office. 
     df.to_csv(f'NM_{office_name}_legislator_info.csv', index = False)
+    #print(df.Legislator)
