@@ -1,2 +1,5 @@
 env/
 *.jpg
+gis/
+.ipynb_checkpoints/
+crosswalks/
