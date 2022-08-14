@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from os.path import basename
+import re
 
 # loop over offices, then navigate to pages for each legislator and scrape data
 for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
@@ -10,7 +11,6 @@ for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
     office_url = f'https://nmlegis.gov/Members/Legislator_List?T={office_identifier}'
     r_office = requests.get(office_url)
     office_soup = BeautifulSoup(r_office.content, 'html5lib', from_encoding='utf-8')
-    #office = office_soup.find('a', attrs = {'id':'siteMapBreadcrumbs_lnkPage_2'}) # get office from page
     office_list = office_soup.find('select', attrs = {'id':'MainContent_ddlLegislators'})
    
     # empty legislator info lists to populate
@@ -29,7 +29,7 @@ for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
     dictlist = [] # empty list for dicsts to combine into data frame
 
     # loop through legislators and scape data
-    for name, rep in zip(rep_names, rep_tags):
+    for name, rep in list(zip(rep_names, rep_tags)):
        
         print(f'\t{name}')
         URL = f"https://nmlegis.gov/Members/Legislator?SponCode={rep}"
@@ -59,15 +59,31 @@ for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
         
         dictlist.append(out_dict) # concatenate with growing dict 
         
-        # download photo
-        pic = soup.find('img', attrs = {'id':'MainContent_formViewLegislator_imgLegislator'})['src'][2:]
-        _name = name.replace(' ', '_')
-        pic_path = f'https://nmlegis.gov{pic}'
-        with open(f'./legislator-photos/{_name}.jpg', 'wb') as f:
-            f.write(requests.get(pic_path).content) 
-        
-    df = pd.DataFrame(dictlist) # create DataFrame from list of dicts
+    df_info = pd.DataFrame(dictlist) # create DataFrame from list of dicts
+    print("Fetching map links\n")
+    
+    ## Scrape sos.nm.state.gov for links to maps of districts
+    on_lower = office_name.lower() # get lowercase name for fstrings
+    URL = f'https://www.sos.state.nm.us/voting-and-elections/data-and-maps/{on_lower}-district-maps/'
+    r = requests.get(URL)
+    soup = BeautifulSoup(r.content, 'html5lib')
+
+    tables = soup.find('table')
+    dict_list = []
+    # loop through table rows and pull out district and link data
+    for i in tables.tbody.findAll('tr'):
+        dis_text = i.find_next('td').text
+        lnk_text = i.find_all('td')[1].find_next('a')['href']
+        if (re.search('[0-9]+', dis_text) is not None): 
+            dict_list.append({f'{on_lower}_district':re.findall('[0-9]+', dis_text)[0], 
+                           'Map Link':lnk_text})
+    df_link = pd.DataFrame(dict_list) # make dataframe with link data
+    
+    df_link[f'{on_lower}_district'] = df_link[f'{on_lower}_district'].astype('int64')
+    df_info['District'] = df_info['District'].astype('int64') 
+
+    # join legislator info with map link 
+    df = df_info.merge(df_link, how = 'left', left_on = 'District', right_on = f'{on_lower}_district').drop([f'{on_lower}_district'], axis = 1)
     
     # write DataFrame out to one CSV for each office. 
-    df.to_csv(f'NM_{office_name}_legislator_info.csv', index = False)
-    #print(df.Legislator)
+    df.to_csv(f'nm_{on_lower}_legislator_info.csv', index = False)
