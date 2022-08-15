@@ -52,6 +52,8 @@ for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
                     info_row = str(row.span).replace('<br/>', ', ')
                     info_soup = BeautifulSoup(info_row, 'html5lib')
                     datum = info_soup.text
+                    if(datum == ',,'):
+                        datum = ''
                 except: 
                     datum = ''
             dict_add = {attr:datum}
@@ -86,4 +88,4 @@ for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
     df = df_info.merge(df_link, how = 'left', left_on = 'District', right_on = f'{on_lower}_district').drop([f'{on_lower}_district'], axis = 1)
     
     # write DataFrame out to one CSV for each office. 
-    df.to_csv(f'nm_{on_lower}_legislator_info.csv', index = False)
+    df.to_csv(f'results/nm_{on_lower}_legislator_info.csv', index = False)
