@@ -8,4 +8,4 @@ Links to congressional district maps are scrapted from https://www.sos.state.nm.
 
 The list of ZCTAs (zip code tabulation areas) are derived from a spatial join of congressional districts and ZCTA boundaries, taken from http://rgis.unm.edu/rgis6/. 
 
-Some post-processing of the output files is required. The two CSVs should be "imported" into a single Excel with UTF-8 encoding to properly render accented characters, and the map links need to be manually linked with `=HYPERLINK()'. 
+Some post-processing of the output files is required. The two CSVs should be "imported" into a single Excel with UTF-8 encoding to properly render accented characters, and the map links need to be manually linked with `=HYPERLINK()`. If you want photographs in the Excel file, this needs to be done manually from the zipped photographs. 
