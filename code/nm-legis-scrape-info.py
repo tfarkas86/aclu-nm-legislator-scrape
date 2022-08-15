@@ -36,8 +36,13 @@ for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
         r = requests.get(URL)
         soup = BeautifulSoup(r.content, 'html5lib') 
         full_name = soup.find('span', attrs = {'id':'MainContent_formViewLegislatorName_lblLegislatorName'})
-        party = full_name.text[(full_name.text.find('(') + 1):full_name.text.find(')')]
+        if (full_name.text.find('(') == -1):
+            party = None 
+        else: 
+            party = full_name.text[(full_name.text.find('(') + 1):full_name.text.find(')')]
         info = soup.find('div', attrs = {'class':'col-xs-12 col-sm-9 legislator-information'}) 
+        if (rep == 'HVACA'):
+            name = "Vacant Seat"
         out_dict = {'Legislator':name, 'Party':party, 'Office':office_name} # initialize dict to hold infoi
         
         # loop through info elements and add to dict
@@ -52,7 +57,9 @@ for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
                     info_row = str(row.span).replace('<br/>', ', ')
                     info_soup = BeautifulSoup(info_row, 'html5lib')
                     datum = info_soup.text
-                    if(datum == ',,'):
+                    if(datum.replace(' ', '') == ',,'):
+                        datum = ''
+                    if(datum == "None"): 
                         datum = ''
                 except: 
                     datum = ''
@@ -85,7 +92,12 @@ for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
     df_info['District'] = df_info['District'].astype('int64') 
 
     # join legislator info with map link 
-    df = df_info.merge(df_link, how = 'left', left_on = 'District', right_on = f'{on_lower}_district').drop([f'{on_lower}_district'], axis = 1)
+    df = (df_info.merge(df_link, how = 'left', left_on = 'District', right_on = f'{on_lower}_district')
+          .drop([f'{on_lower}_district'], axis = 1)
+          .merge(pd.read_csv(f'../crosswalks/{on_lower}-zcta-crosswalk-comma-sep.csv'), 
+                 how = 'left', left_on = 'District', right_on = f'{on_lower}_district')
+          .drop([f'{on_lower}_district'], axis = 1)
+          )
     
     # write DataFrame out to one CSV for each office. 
-    df.to_csv(f'results/nm_{on_lower}_legislator_info.csv', index = False)
+    df.to_csv(f'../legislator-info/nm_{on_lower}_legislator_info.csv', index = False)
