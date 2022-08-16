@@ -3,3 +3,6 @@ env/
 .ipynb_checkpoints/
 crosswalks/
 *.zip
+*.xlsx
+*.xlsm
+.DS_Store

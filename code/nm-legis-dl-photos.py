@@ -37,10 +37,12 @@ for office_identifier, office_name in zip(['R', 'S'], ['House', 'Senate']):
         
         # download photo
         try: 
+            info = soup.find('div', attrs = {'class':'col-xs-12 col-sm-9 legislator-information'}) 
+            dist = info.findAll('li', attrs = {'class':'list-group-item'})[0].a.text.replace(' ', '').zfill(2)
             pic = soup.find('img', attrs = {'id':'MainContent_formViewLegislator_imgLegislator'})['src'][2:]
             _name = name.replace(' ', '_')
             pic_path = f'https://nmlegis.gov{pic}'
-            with open(f'./legislator-photos/{office_name}/{_name}.jpg', 'wb') as f:
+            with open(f'./legislator-photos/{office_name}/{dist}_{_name}.jpg', 'wb') as f:
                 f.write(requests.get(pic_path).content) 
         except: 
             next
