@@ -10,4 +10,4 @@ The list of ZCTAs (zip code tabulation areas) are derived from a spatial join of
 
 Some post-processing of the output files is required. The two CSVs should be "imported" into a single Excel with UTF-8 encoding to properly render accented characters, and the map links need to be manually linked with `=HYPERLINK()`. If you want photographs in the Excel file, this needs to be done manually from the zipped photographs. 
 
-Photographs for each legislator can be automatically inserted to each sheet of an Excel workbook by running the macro in `code/add-photos-to-excel.vb`. Run once for each of House and Senate, and be sure to change the sheet names, paths, and row numbers to accomodate each case. 
+Photographs for each legislator can be automatically inserted to each sheet of an Excel workbook by running the macro in `code/add-photos-to-excel.vb`. Run once for each of House and Senate, and be sure to change the sheet names, paths, and row numbers to accomodate each case. It may be required to insert all photos manually (once, anywhere, then delete) before running the macros to match photos with their legislators. 
