@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Download From S3</title>
+</head>   
+<script>
+        // define the callAPI function that takes a first name and last name as parameters
+        var runScrapers = ()=>{
+            
+            alert("The scrapers are running! This many take a few minutes.")
+
+            // instantiate a headers object
+            var myHeaders = new Headers();
+            // add content type header to object
+            myHeaders.append("Content-Type", "application/json");
+            // using built in JSON utility package turn object to string and store in a variable
+            
+            // senate
+            var raw_senate = JSON.stringify({"office_name":"Senate", 
+                                      "office_identifier":"S"});
+            // create a JSON object with parameters for API call and store in a variable
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw_senate,
+                redirect: 'follow'
+            };
+            // make API call with parameters and use promises to get response
+
+            restAPIurl_senate = "https://lyks13h07l.execute-api.us-west-1.amazonaws.com/dev" 
+            fetch(restAPIurl_senate, requestOptions)
+            .then(response => response.text())
+            .then(result => alert(JSON.parse(result).body))
+            .catch(error => console.log('error', error));
+
+            // house
+            var raw_house = JSON.stringify({"office_name":"House", 
+                                      "office_identifier":"R"});
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw_house,
+                redirect: 'follow'
+            };
+            restAPIurl_house = "https://lyks13h07l.execute-api.us-west-1.amazonaws.com/dev" 
+            fetch(restAPIurl_house, requestOptions)
+            .then(response => response.text())
+            .then(result => alert(JSON.parse(result).body))
+            .catch(error => console.log('error', error));
+            
+            // merge CSVs to Excel
+            var raw_merge = JSON.stringify({"office_name":"House", 
+                                      "office_identifier":"R"});
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw_merge,
+                redirect: 'follow'
+            };
+            restAPIurl_merge = "https://tcof4hq2yc.execute-api.us-west-1.amazonaws.com/dev" 
+            fetch(restAPIurl_merge, requestOptions)
+            .then(response => response.text())
+            .then(result => alert(JSON.parse(result).body))
+            .catch(error => console.log('error', error));
+
+            // photos
+            var raw_photos = JSON.stringify({"office_name":"House", 
+                                      "office_identifier":"R"});
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw_photos,
+                redirect: 'follow'
+            };
+            restAPIurl_photos = "https://pldeo9me07.execute-api.us-west-1.amazonaws.com/dev" 
+            fetch(restAPIurl_photos, requestOptions)
+            .then(response => response.text())
+            .then(result => alert(JSON.parse(result).body))
+            .catch(error => console.log('error', error));
+            
+            // make zip of photos
+            var raw_zip = JSON.stringify({"office_name":"House", 
+                                      "office_identifier":"R"});
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw_zip,
+                redirect: 'follow'
+            };
+            restAPIurl_zip = "https://34rear31c8.execute-api.us-west-1.amazonaws.com/dev" 
+            fetch(restAPIurl_zip, requestOptions)
+            .then(response => response.text())
+            .then(result => alert(JSON.parse(result).body))
+            .catch(error => console.log('error', error));
+        }
+</script>
+<script>
+        // define the callAPI function that takes a first name and last name as parameters
+        var verifyEmail = (email_address)=>{
+            // instantiate a headers object
+            var myHeaders = new Headers();
+            // add content type header to object
+            myHeaders.append("Content-Type", "application/json");
+            // using built in JSON utility package turn object to string and store in a variable
+            var raw = JSON.stringify({"email":email_address});
+            // create a JSON object with parameters for API call and store in a variable
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+            // make API call with parameters and use promises to get response
+            restAPIurl = "https://qwkfbbu5i4.execute-api.us-west-1.amazonaws.com/dev" 
+            fetch(restAPIurl, requestOptions)
+            .then(response => response.text())
+            .then(result => alert(JSON.parse(result).body))
+            .catch(error => console.log('error', error));
+        }
+</script>
+<script>
+        // define the callAPI function that takes a first name and last name as parameters
+        var sendEmail = (email_address)=>{
+            // instantiate a headers object
+            var myHeaders = new Headers();
+            // add content type header to object
+            myHeaders.append("Content-Type", "application/json");
+            // using built in JSON utility package turn object to string and store in a variable
+            var raw = JSON.stringify({"email":email_address});
+            // create a JSON object with parameters for API call and store in a variable
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+            // make API call with parameters and use promises to get response
+            restAPIurl = "https://p5e2ac38m1.execute-api.us-west-1.amazonaws.com/dev" 
+            fetch(restAPIurl, requestOptions)
+            .then(response => response.text())
+            .then(result => alert(JSON.parse(result).body))
+            .catch(error => console.log('error', error));
+        }
+</script>
+<script>
+        // define the callAPI function that takes a first name and last name as parameters
+        var mergeCSVs= ()=>{
+            // make API call with parameters and use promises to get response
+            restAPIurl = "https://8nn5utria1.execute-api.us-west-1.amazonaws.com/default" 
+            fetch(restAPIurl)
+        }
+</script>
+
+<body>
+    <form>
+        <!-- set button onClick method to call function we defined passing input values as parameters -->
+        <button type="button" onclick="runScrapers();mergeCSVs()">Run Scrapers</button>
+            </p>
+            <p>
+        <label>Email :</label>
+        <input type="text" id="to_email">
+            </p>
+            <p>
+        <!-- set button onClick method to call function we defined passing input values as parameters -->
+        <button type="button" onclick="verifyEmail(document.getElementById('to_email').value)">Verify Email</button>
+            </p>
+            <p>
+        <!-- set button onClick method to call function we defined passing input values as parameters -->
+        <button type="button" onclick="sendEmail(document.getElementById('to_email').value)">Send Download Link</button>
+            </p>
+            <p>
+        <!-- set button onClick method to call function we defined passing input values as parameters -->
+        <button type="button" onclick="mergeCSVs()">Merge CSVs</button>
+            </p>
+    </form>
+</body>
+</html>
