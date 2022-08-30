@@ -8,3 +8,4 @@ crosswalks/
 *.xlsm
 .DS_Store
 votes/
+votes-csvs/
