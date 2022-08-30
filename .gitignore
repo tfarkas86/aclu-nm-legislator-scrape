@@ -7,3 +7,4 @@ crosswalks/
 *.xlsx
 *.xlsm
 .DS_Store
+votes/
