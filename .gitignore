@@ -9,3 +9,5 @@ crosswalks/
 .DS_Store
 votes/
 votes-csvs/
+votes-pdfs/
+repro-votes-csvs/
