@@ -1,5 +1,4 @@
 env/
-*.ipynb
 *.jpg
 .ipynb_checkpoints/
 crosswalks/
@@ -12,3 +11,4 @@ votes-csvs/
 votes-csvs.tgz
 votes-pdfs/
 repro-votes-csvs/
+concat.csv
