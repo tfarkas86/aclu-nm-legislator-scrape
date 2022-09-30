@@ -12,3 +12,4 @@ votes-csvs.tgz
 votes-pdfs/
 repro-votes-csvs/
 concat.csv
+repro-votes-reshaped.csv
