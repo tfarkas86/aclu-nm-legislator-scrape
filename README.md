@@ -1,6 +1,6 @@
 # aclu-nm-legislator-scrape
 
-This repo contains scripts to automatically harvest information about current New Mexico legislators and output CSVs with all information.  
+This repo contains scripts to automatically harvest information about current New Mexico legislators, output CSVs and Excel files. Harvesting voting records of legislators are of particular interest, since the data are stored in PDF tables, making programmatic access more challenging. 
 
 Data about individual legislators is scraped from https://nmlegis.gov/. Photographs of each legislator are automatically downloaded.  
 
